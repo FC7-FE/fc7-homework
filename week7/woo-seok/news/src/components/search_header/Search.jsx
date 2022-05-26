@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
+import axios from 'axios';
 import styles from './Search.module.css';
 import classNames from 'classnames/bind';
-import { toStringByFormatting, leftPad } from '../../utills/dateFormat.js';
+import { toStringByFormatting } from '../../utills/dateFormat.js';
 
 const cx = classNames.bind(styles);
 
@@ -20,16 +21,15 @@ export default function Search({ updateNews }) {
   };
 
   const newsHandler = async (event) => {
-    const newsJson = await searchNews();
-    if (newsJson === undefined) return;
-    updateNews(newsJson.articles);
+    const news = await searchNews();
+    updateNews(news);
   };
 
   const searchNews = async () => {
-    const today = toStringByFormatting(new Date('2022-05-25'));
+    const today = toStringByFormatting(new Date());
     const word = inputRef.current.value.trim();
 
-    if (word.length === 0) {
+    if (!word) {
       alert('검색어를 입력 후 검색해주세요.');
       inputRef.current.value = '';
       inputRef.current.focus();
@@ -38,11 +38,11 @@ export default function Search({ updateNews }) {
 
     try {
       const searchUrl = `${NEWS_API_URL}&q=${word}&from=${today}&to=${today}&sortBy=popularity&language=en`;
-      const res = await fetch(searchUrl);
-      if (res.status !== 200) {
-        throw new Error("Can't find news");
-      }
-      return await res.json();
+      const res = await axios.get(searchUrl);
+
+      if (res.status !== 200) throw new Error("Can't find news");
+
+      return res.data.articles;
     } catch (e) {
       console.error(e);
     }

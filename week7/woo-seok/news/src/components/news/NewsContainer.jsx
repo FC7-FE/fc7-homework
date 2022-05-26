@@ -9,7 +9,7 @@ const cx = classNames.bind(styles);
 export default function NewsContainer({ newsList }) {
   return (
     <main className={cx('main')}>
-      {newsList.length === 0 ? <EmptyNews /> : <News newsList={newsList} />}
+      {newsList?.length === 0 ? <EmptyNews /> : <News newsList={newsList} />}
     </main>
   );
 }
