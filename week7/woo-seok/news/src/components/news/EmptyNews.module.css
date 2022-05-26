@@ -1,0 +1,14 @@
+/* no-article */
+.no-article {
+  width: 600px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  background-color: var(--color-gray);
+  border: 2px solid var(--color-darkgray);
+  border-radius: 4px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

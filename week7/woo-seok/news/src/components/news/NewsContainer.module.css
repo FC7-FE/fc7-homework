@@ -1,0 +1,7 @@
+.main {
+  width: var(--main-width);
+  height: 100%;
+  padding-top: var(--header-height);
+  margin: 0 auto;
+  position: relative;
+}
