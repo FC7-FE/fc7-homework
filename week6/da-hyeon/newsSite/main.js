@@ -1,108 +1,70 @@
-//DOM 구조 생성
+//DOM
 const searchForm = document.querySelector('.search-form');
 const searchInput = document.querySelector('.search-input');
-const newsList = document.querySelector('.news-lists');
+const news = document.querySelector('.news');
+//API Key
+const apiKey = "2721d1f0de38415b978ddeed5ff2291a";
+let topic;
 
-//form 검색 인식하면 이벤트 실행
+//EventListener
 searchForm.addEventListener('submit', retrieve);
 function retrieve(e){
-    //form submit 기본 전송기능(action) 막기
     e.preventDefault();
-
-    let topic = searchInput.value;
-    const apiKey = "2721d1f0de38415b978ddeed5ff2291a";
+    checkTopic()
+    getNews()
+}
+//searchInput 검사 (공백, trim)
+function checkTopic(){
+    topic = searchInput.value.trim();
+    topic 
+    ? console.log(topic)
+    : alert('검색어를 입력해주세요.')
+}
+//getNews
+async function getNews(){
     let url=`https://newsapi.org/v2/everything?q=${topic}&apiKey=${apiKey}`;
-    
-    //검색내용 없을 때는 alert창 띄우기
-    if(topic == ""){
-        alert('먼저 검색어를 입력해주시죨.');
-        return;
+    const fetched = await fetch(url);
+    if(fetched.status == 200){
+        const newsData = await fetched.json();
+        //News 결과 유무에 따라 render
+        newsData.totalResults
+        ? renderNews(newsData) 
+        : noResult()  
+    }else{
+        throw new Error ("error")
     }
-
-    //news-list의 내용값 비우기(기존 검색된 li 모두 제거)
-    newsList.innerHTML="";
-
-    //newsApi에서 가져온 정보로 DOM에 출력
-    fetch(url).then((res)=>{
-        return res.json()
-    }).then((data)=>{
-        console.log(data);
-        data.articles.forEach(article=>{
-            /* 각 뉴스 */
-            //li.news
-            let li = document.createElement('li');
-            li.className = "news";
-            //li.news>a
-            let a = document.createElement('a');
-            a.setAttribute('href',article.url);
-            a.setAttribute('target','_blank');
-            // a.textContent=article.title;
-
-            /* 뉴스 썸네일 */
-            //div.news-thumbnail
-            let thumbnail = document.createElement('div');
-            thumbnail.className = "news-thumbnail";
-            //div.news-thumbnail>img
-            let thumbnailImg = document.createElement('img');
-            thumbnailImg.setAttribute('src', article.urlToImage)
-
-            /* 뉴스 내용 */
-            //div.news-contents
-            let contents = document.createElement('div');
-            contents.className = "news-contents";
-
-            /* 뉴슥 내용 - 작가 , 날짜 */
-            //div.news-info
-            let newsInfo = document.createElement('div');
-            newsInfo.className = "news-info";
-            //span.news-author 작가
-            let author = document.createElement('span');
-            author.className = "news-author";
-            author.textContent=article.author;
-            //span.news-date 날짜
-            let date = document.createElement('span');
-            date.className = "news-date";
-            date.textContent=article.publishedAt;
-
-            /* 뉴슥 내용 - 제목 */
-            //div.news-title
-            let title = document.createElement('p');
-            title.className = "news-title";
-            title.textContent=article.title;
-
-            /* 뉴슥 내용 - 설명글 */
-            //div.news-description
-            let description = document.createElement('p');
-            description.className = "news-description";
-            description.textContent=article.description;
-
-            //만든 DOM요소들 부모에 넣기
-            newsList.appendChild(li);
-            li.appendChild(a);
-
-            a.appendChild(thumbnail);
-            thumbnail.append(thumbnailImg);
-
-            a.appendChild(contents);
-            contents.appendChild(newsInfo);
-            newsInfo.appendChild(author);
-            newsInfo.appendChild(date);
-            contents.appendChild(title);
-            contents.appendChild(description);
-        })
-
-        //관련 뉴스 없을 때 
-        let totalResults = data.totalResults;
-        console.log(totalResults);
-        if(totalResults == '0'){
-            console.log('없');
-            let noResullt = document.createElement('strong');
-            noResullt.className = "noResult";
-            noResullt.textContent="아이쿠 아무런 기사가 없네요ㅠㅠ";
-            newsList.appendChild(noResullt);
-        }
-    }).catch((error)=>{console.log('error')});
-    
-    console.log(topic);
-  
+} 
+//News 결과 있을 때) newsList출력
+function renderNews(newsData){
+    news.innerHTML="";
+    const article = newsData.articles;
+    console.log(article);
+    let newsList = article.reduce((prevLi, currentLi, index)=>{
+        return (
+            prevLi + 
+            `<li class="news-list">
+               <a href="${article[index].url}" target="_blank">
+                    <div class="news-thumbnail">
+                        <img src="${article[index].urlToImage}">
+                    </div>
+                    <div class="news-contents">
+                        <div class="news-info">
+                            <span class="news-author">${article[index].author}</span>
+                            <span class="news-date">${article[index].publishedAt}</span>
+                        </div>
+                        <p class="news-title">${article[index].title}</p>
+                        <p class="news-description">${article[index].description}</p>
+                    </div>
+               </a> 
+            </li>`
+        )
+    },'');
+    news.innerHTML=newsList;
+}
+//News 결과 없을 때) 안내 메시지 출력
+function noResult(){
+    news.innerHTML="";
+    news.innerHTML=`
+        <li> "${topic}" 관련 기사는 존재하지않습니다.</li>
+    `
 }
