@@ -1,0 +1,22 @@
+@import url(https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css);
+@import url(https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0);
+
+*{box-sizing: border-box;}
+
+.container{
+  position: relative;
+  margin: 50px auto 0 auto;
+  max-width: 450px; 
+}
+
+header {
+  position:fixed;
+  top:0;
+  left:0;
+  padding:10px;
+  z-index:1;
+  width:100%;
+  font-size:30px;
+  background-color: #7c9aff;
+  color:white;
+}
