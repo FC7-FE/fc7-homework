@@ -124,12 +124,13 @@ img {
   text-decoration: none;
 }
 .first-article {
+  margin-top: 40px;
   margin-bottom: 40px;
+  width: 800px;
 }
-.first-article > img {
+.first-article > a > img {
   margin-top: 40px;
   width: 800px;
-  height: 400px;
   background: #E5E5E5;
   border: 2px solid #5F5F5F;
   box-sizing: border-box;
@@ -179,7 +180,7 @@ img {
   font-weight: 600;
   line-height: 17px;
 }
-.card-article > div > span {
+.card-article > div > small > .date {
   margin-left: 12px;
   color: #A5A5A5;
 }
