@@ -1,0 +1,14 @@
+/* reset css */
+@import url('https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css');
+
+/* google fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* common */
+@import './css/common.css';
+@import './css/variables.css';
+
+/* basic setting */
+* {box-sizing: border-box;}
+body{height: 100vh; font-family: 'Inter', sans-serif; font-size: 18px; }
+#root {height: 100%;}
